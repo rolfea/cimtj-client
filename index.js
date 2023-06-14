@@ -1,4 +1,7 @@
 window.onload = () => {
+  // local dev
+  // const server = 'http://localhost:8000';
+  const server = 'https://cimtj-server.onrender.com';
   const submitJokeBtn = document.querySelector('#submit-joke');
   const jokeTextInput = document.querySelector('#joke-text');
 
@@ -16,9 +19,7 @@ window.onload = () => {
 
   const submitJoke = async () => {
     const jokeText = document.querySelector('#joke-text').value;
-    const result = await (
-      await fetch(`http://localhost:8000?jokeText=${jokeText}`)
-    ).json();
+    const result = await (await fetch(`${server}?jokeText=${jokeText}`)).json();
 
     displayResult(result, jokeText);
   };
