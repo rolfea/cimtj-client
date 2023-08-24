@@ -20,12 +20,19 @@ window.onload = () => {
   };
 
   const submitJoke = async () => {
-    setLoading();
-    const jokeText = getJokeText();
-    const result = await getToxicity(jokeText);
-    hideLoading();
+    try {
+      setLoading();
+      const jokeText = getJokeText();
+      const result = await getToxicity(jokeText);
+      hideLoading();
 
-    displayResult(result, jokeText);
+      displayResult(result, jokeText);
+    } catch (e) {
+      hideLoading();
+      displayError(
+        'Something went wrong with your request. Please try again later'
+      );
+    }
   };
 
   const setLoading = () => (loader.style.display = 'block');
@@ -37,15 +44,25 @@ window.onload = () => {
     await (await fetch(`${server}?jokeText=${jokeText}`)).json();
 
   const displayResult = (result, jokeText) => {
-    const newResult = document.createElement('p');
+    const newResult = createResultParagraph();
     newResult.innerText = `JOKE: ${jokeText} | Sketchy-Score: ${Math.round(
       result.attributeScores.TOXICITY.summaryScore.value * 100
     )} /
     100`;
 
-    const resultList = document.querySelector('.results');
-    resultList.append(newResult);
+    appendResultToList(newResult);
   };
+
+  const displayError = (errorMessage) => {
+    const newResult = createResultParagraph();
+    newResult.innerText = errorMessage;
+    newResult.style.color = 'red';
+    appendResultToList(newResult);
+  };
+
+  const createResultParagraph = () => document.createElement('p');
+  const appendResultToList = (result) =>
+    document.querySelector('.results').append(result);
 
   // I'm cheap, so my Render instance is going to be asleep on first page visit.
   // Send a request to wake it up!
