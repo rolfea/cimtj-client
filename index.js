@@ -5,6 +5,7 @@ window.onload = () => {
 
   const submitJokeBtn = document.querySelector('#submit-joke');
   const jokeTextInput = document.querySelector('#joke-text');
+  const loader = document.querySelector('#loader');
 
   jokeTextInput.addEventListener('input', (event) => handleEnable());
   submitJokeBtn.addEventListener('click', async (event) => submitJoke());
@@ -19,11 +20,16 @@ window.onload = () => {
   };
 
   const submitJoke = async () => {
+    setLoading();
     const jokeText = getJokeText();
     const result = await getToxicity(jokeText);
+    hideLoading();
 
     displayResult(result, jokeText);
   };
+
+  const setLoading = () => (loader.style.display = 'block');
+  const hideLoading = () => (loader.style.display = 'none');
 
   const getJokeText = () => document.querySelector('#joke-text').value;
 
