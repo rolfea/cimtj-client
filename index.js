@@ -2,6 +2,7 @@ window.onload = () => {
   // local dev
   // const server = 'http://localhost:8000';
   const server = 'https://cimtj-server.onrender.com';
+
   const submitJokeBtn = document.querySelector('#submit-joke');
   const jokeTextInput = document.querySelector('#joke-text');
 
@@ -18,11 +19,16 @@ window.onload = () => {
   };
 
   const submitJoke = async () => {
-    const jokeText = document.querySelector('#joke-text').value;
-    const result = await (await fetch(`${server}?jokeText=${jokeText}`)).json();
+    const jokeText = getJokeText();
+    const result = await getToxicity(jokeText);
 
     displayResult(result, jokeText);
   };
+
+  const getJokeText = () => document.querySelector('#joke-text').value;
+
+  const getToxicity = async (jokeText) =>
+    await (await fetch(`${server}?jokeText=${jokeText}`)).json();
 
   const displayResult = (result, jokeText) => {
     const newResult = document.createElement('p');
@@ -34,4 +40,8 @@ window.onload = () => {
     const resultList = document.querySelector('.results');
     resultList.append(newResult);
   };
+
+  // I'm cheap, so my Render instance is going to be asleep on first page visit.
+  // Send a request to wake it up!
+  getToxicity('Wake up');
 };
